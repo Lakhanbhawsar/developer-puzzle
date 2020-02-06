@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ChartComponent } from './chart.component';
+import { SharedUiChartModule } from 'libs/shared/ui/chart/src/lib/shared-ui-chart.module';
 
 describe('ChartComponent', () => {
   let component: ChartComponent;
@@ -8,7 +8,7 @@ describe('ChartComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ChartComponent ]
+      imports: [SharedUiChartModule]
     })
     .compileComponents();
   }));

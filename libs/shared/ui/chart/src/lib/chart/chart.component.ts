@@ -1,11 +1,11 @@
 import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   Input,
   OnInit
 } from '@angular/core';
-import { Observable } from 'rxjs';
+import { CHART_CONSTANT } from 'libs/shared/ui/chart/src/lib/constants/chart.constant';
+import { IChartOption } from 'libs/shared/ui/chart/src/lib/Interfaces/chart-option.interface';
+import { IChartDataArray } from 'libs/shared/ui/chart/src/lib/Interfaces/chart-data.interface';
 
 @Component({
   selector: 'coding-challenge-chart',
@@ -13,27 +13,28 @@ import { Observable } from 'rxjs';
   styleUrls: ['./chart.component.css']
 })
 export class ChartComponent implements OnInit {
-  @Input() data$: Observable<any>;
-  chartData: any;
+  @Input() data$: IChartDataArray[][];
 
   chart: {
     title: string;
     type: string;
-    data: any;
+    data: IChartDataArray[][];
     columnNames: string[];
-    options: any;
+    options: IChartOption;
   };
-  constructor(private cd: ChangeDetectorRef) {}
+  constructor() {}
 
   ngOnInit() {
     this.chart = {
       title: '',
-      type: 'LineChart',
+      type: CHART_CONSTANT.LINE_CHART,
       data: [],
-      columnNames: ['period', 'close'],
-      options: { title: `Stock price`, width: '600', height: '400' }
+      columnNames: [CHART_CONSTANT.PERIOD, CHART_CONSTANT.CLOSE],
+      options: {
+        title: CHART_CONSTANT.STOCK_PRICE,
+        width: CHART_CONSTANT.SIX_HUNDRED,
+        height: CHART_CONSTANT.FOUR_HUNDRED
+      }
     };
-
-    this.data$.subscribe(newData => (this.chartData = newData));
   }
 }
