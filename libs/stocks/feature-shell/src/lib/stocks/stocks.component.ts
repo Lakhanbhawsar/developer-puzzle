@@ -8,11 +8,13 @@ import { PriceQueryFacade } from '@coding-challenge/stocks/data-access-price-que
   styleUrls: ['./stocks.component.css']
 })
 export class StocksComponent implements OnInit {
-  stockPickerForm: FormGroup;
-  symbol: string;
-  period: string;
+  public stockPickerForm: FormGroup;
+  public symbol: string;
+  public period: string
+  private currentDate: Date;
+  private startDate: Date;
 
-  quotes$ = this.priceQuery.priceQueries$;
+  public quotes$ = this.priceQuery.priceQueries$;
 
   timePeriods = [
     { viewValue: 'All available data', value: 'max' },
@@ -28,16 +30,28 @@ export class StocksComponent implements OnInit {
   constructor(private fb: FormBuilder, private priceQuery: PriceQueryFacade) {
     this.stockPickerForm = fb.group({
       symbol: [null, Validators.required],
-      period: [null, Validators.required]
+      fromDate: [null, Validators.required],
+      toDate: [null, Validators.required]
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.currentDate = new Date();
+  }
+
+  onSelectDate() {
+    this.startDate = this.stockPickerForm.value.fromDate;
+    const { fromDate, toDate } = this.stockPickerForm.value;
+    if (fromDate && toDate && fromDate > toDate) {
+      this.stockPickerForm.controls['toDate'].setValue(fromDate);
+    }
+  }
 
   fetchQuote() {
     if (this.stockPickerForm.valid) {
-      const { symbol, period } = this.stockPickerForm.value;
-      this.priceQuery.fetchQuote(symbol, period);
+      const { symbol, fromDate, toDate } = this.stockPickerForm.value;
+      this.priceQuery.fetchQuote(symbol, 'max');
+      this.priceQuery.filterSelectedDate(fromDate, toDate);
     }
   }
 }
